@@ -6,7 +6,7 @@
 #define NMAX 27000
 
 void
-bitmap_set(int val, uint8_t *bitmap)
+bitmap_set(int val, uint8_t bitmap[])
 {
     int loc = val / 8;
     int bit = val % 8;
@@ -15,7 +15,7 @@ bitmap_set(int val, uint8_t *bitmap)
 }
 
 int
-bitmap_isset(int val, uint8_t *bitmap)
+bitmap_isset(int val, uint8_t bitmap[])
 {
     int loc = val / 8, bit = val % 8;
 
@@ -48,20 +48,17 @@ rand_ints(int len)
     return ret;
 }
 
-int *
-bitmapsort(int *data, int len)
+void
+bitmapsort(int data[], int len)
 {
     uint8_t bitmap[NMAX / 8] = {0};
-    static int ret[NMAX];
 
     for (int i = 0; i < len; i++)
         bitmap_set(data[i], bitmap);
 
     for (int i = 0, index = 0; i < NMAX; i++)
         if (bitmap_isset(i, bitmap))
-            ret[index++] = i;
-
-    return ret;
+            data[index++] = i;
 }
 
 int
@@ -81,8 +78,8 @@ main(void)
     int *sorted;
 
     assert(!issorted(data, len));
-    sorted = bitmapsort(data, len);
-    assert(issorted(sorted, len));
+    bitmapsort(data, len);
+    assert(issorted(data, len));
 
     return 0;
 }
